@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hackpad Key Tester</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #0f0f1a;
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+  }
+  h1 {
+    font-size: 1.6rem;
+    color: #a78bfa;
+    letter-spacing: 0.05em;
+  }
+  .subtitle { color: #888; font-size: 0.85rem; margin-top: -20px; }
+  .pad {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+  }
+  .key-box {
+    width: 110px;
+    height: 110px;
+    border: 3px solid #333;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.08s ease;
+    background: #1a1a2e;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    cursor: pointer;
+    user-select: none;
+  }
+  .key-box.active {
+    border-color: #a78bfa;
+    background: #2d1b69;
+    box-shadow: 0 0 24px rgba(167,139,250,0.45);
+    transform: scale(0.95);
+  }
+  .key-label {
+    font-size: 0.7rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+  .key-code {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #c4b5fd;
+  }
+  .key-box.active .key-code { color: #fff; }
+  .log-section {
+    width: min(520px, 90vw);
+  }
+  .log-header {
+    font-size: 0.75rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+  #log {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 10px;
+    padding: 14px;
+    height: 160px;
+    overflow-y: auto;
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
+    font-size: 0.82rem;
+    line-height: 1.7;
+  }
+  #log .entry { color: #888; }
+  #log .entry .time { color: #555; }
+  #log .entry .key-name { color: #a78bfa; font-weight: 600; }
+  #log .entry .key-val { color: #34d399; }
+  .status {
+    font-size: 0.8rem;
+    color: #34d399;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .status::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #34d399;
+    display: inline-block;
+  }
+</style>
+</head>
+<body>
+  <h1>⌨️ Hackpad Key Tester</h1>
+  <p class="subtitle">Press each key on your Hackpad — watch for highlights below</p>
+  <div class="status">Listening for keyboard input…</div>
+  <div class="pad">
+    <div class="key-box" id="k0"><span class="key-label">SW1</span><span class="key-code" id="kc0">1</span></div>
+    <div class="key-box" id="k1"><span class="key-label">SW2</span><span class="key-code" id="kc1">2</span></div>
+    <div class="key-box" id="k2"><span class="key-label">SW3</span><span class="key-code" id="kc2">3</span></div>
+    <div class="key-box" id="k3"><span class="key-label">SW4</span><span class="key-code" id="kc3">4</span></div>
+    <div class="key-box" id="k4"><span class="key-label">SW5</span><span class="key-code" id="kc4">5</span></div>
+  </div>
+  <div class="log-section">
+    <div class="log-header">Event Log</div>
+    <div id="log"></div>
+  </div>
+<script>
+const keys = [{ code: '1', label: '1' },
+    { code: '2', label: '2' },
+    { code: '3', label: '3' },
+    { code: '4', label: '4' },
+    { code: '5', label: '5' }
+];
+const log = document.getElementById('log');
+
+function now() {
+  return new Date().toLocaleTimeString();
+}
+
+function flash(idx) {
+  const box = document.getElementById('k' + idx);
+  box.classList.add('active');
+  setTimeout(() => box.classList.remove('active'), 180);
+}
+
+function addLog(text) {
+  const entry = document.createElement('div');
+  entry.className = 'entry';
+  entry.innerHTML = '<span class="time">' + now() + '</span> — ' + text;
+  log.prepend(entry);
+  if (log.children.length > 50) log.removeChild(log.lastChild);
+}
+
+document.addEventListener('keydown', e => {
+  e.preventDefault();
+  for (let i = 0; i < keys.length; i++) {
+    if (e.key === keys[i].code || e.code === keys[i].code) {
+      flash(i);
+      addLog('<span class="key-name">' + keys[i].label + '</span> pressed  <span class="key-val">(code: ' + e.code + ')</span>');
+      return;
+    }
+  }
+  addLog('Other key: <span class="key-val">' + e.code + '</span>  <span class="key-name">' + e.key + '</span>');
+});
+
+document.addEventListener('keyup', e => {
+  e.preventDefault();
+});
+
+// allow tab
+document.addEventListener('keydown', e => {
+  if (e.code === 'Tab') e.preventDefault();
+});
+</script>
+</body>
+</html>

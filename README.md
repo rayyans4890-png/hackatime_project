@@ -20,12 +20,18 @@ I designed the PCB, made a case for it, and added firmware so all of the switche
 
 
 ### PCB
+
 <img width="1642" height="942" alt="image" src="https://github.com/user-attachments/assets/0a615c86-6707-4978-82ce-fffbb6a74355" />
 
 
 ### Case
 
 <img width="1919" height="1016" alt="Screenshot 2026-08-22 174152" src="https://github.com/user-attachments/assets/a090f722-b6c3-48f3-90df-de3e00657f19" />
+
+
+### PCB Schematic
+
+<img width="1919" height="1021" alt="image" src="https://github.com/user-attachments/assets/ab9c5a95-7a2a-4c5d-96b4-8d7ecb4f2a57" />
 
 
 
